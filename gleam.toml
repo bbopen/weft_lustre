@@ -1,0 +1,20 @@
+name = "weft_lustre"
+version = "0.1.0"
+description = "Lustre adapter for weft — Elm-UI-style layout on top of sketch_lustre."
+licences = ["Apache-2.0"]
+repository = { type = "github", user = "brettbonner", repo = "weft_lustre" }
+gleam = ">= 1.14.0"
+
+[dependencies]
+gleam_stdlib = ">= 0.69.0"
+sketch_lustre = ">= 3.1.2"
+lustre = ">= 5.5.2"
+weft = { path = "../weft" }
+
+[dev-dependencies]
+startest = ">= 0.8.0"
+
+[documentation]
+pages = [
+  { title = "Technical Specification", path = "SPEC.md" },
+]
