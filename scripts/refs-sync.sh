@@ -19,7 +19,7 @@ pick_input_file() {
     if python3 - "$lock_file" <<'PY'
 import sys, tomllib, pathlib
 p = pathlib.Path(sys.argv[1])
-data = tomllib.loads(p.read_bytes())
+data = tomllib.loads(p.read_text(encoding="utf-8"))
 refs = data.get("ref", [])
 sys.exit(0 if refs else 1)
 PY
@@ -39,7 +39,7 @@ refs_tsv="$(
   python3 - "$input_file" <<'PY'
 import sys, tomllib, pathlib
 p = pathlib.Path(sys.argv[1])
-data = tomllib.loads(p.read_bytes())
+data = tomllib.loads(p.read_text(encoding="utf-8"))
 refs = data.get("ref", [])
 for r in refs:
   name = r.get("name", "").strip()
@@ -107,4 +107,3 @@ done <<< "$refs_tsv"
 mv "$tmp_lock" "$lock_file"
 say ""
 say "OK: wrote $lock_file"
-
