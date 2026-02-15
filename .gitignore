@@ -18,3 +18,4 @@ SKILLS.md
 _refs/*
 !_refs/refs.toml
 !_refs/refs.lock.toml
+!_refs/*_demo.gleam

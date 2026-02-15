@@ -135,7 +135,28 @@ if [[ "$TARGET" == "cross" ]]; then
   fi
 
   check_no_match "import gleam/erlang (cross-target forbidden)" "import gleam/erlang" "${search_dirs[@]}"
-  check_no_match "import gleam/javascript (cross-target forbidden)" "import gleam/javascript" "${search_dirs[@]}"
+
+  # Allow a small JS-only surface behind `@target(javascript)` for effects (for
+  # example modal focus trapping). This is still subject to review and should
+  # remain tightly scoped.
+  js_import_files="$(list_files_with_match "import gleam/javascript" "${search_dirs[@]}")"
+  if [[ -n "$js_import_files" ]]; then
+    bad_files=""
+    while IFS= read -r f; do
+      case "$f" in
+        "$src_dir/weft_lustre/modal.gleam") ;;
+        *) bad_files="${bad_files}${bad_files:+$'\n'}${f}" ;;
+      esac
+    done <<< "$js_import_files"
+
+    if [[ -n "$bad_files" ]]; then
+      say ""
+      say "Cross-target libs must not import gleam/javascript (except in whitelisted JS-only modules). Found in:"
+      say "$bad_files"
+      fail "import gleam/javascript (cross-target forbidden)"
+    fi
+  fi
+
   check_toml_no_target
 else
   # Erlang-target libs may use FFI, but it must be isolated to clearly-named modules.
