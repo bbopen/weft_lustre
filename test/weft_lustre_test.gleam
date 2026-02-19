@@ -75,6 +75,38 @@ pub fn weft_lustre_tests() {
         string.contains(css, "gap:8px;")
         |> expect.to_equal(expected: True)
       }),
+      it("injects container query CSS", fn() {
+        let view =
+          weft_lustre.column(
+            attrs: [
+              weft_lustre.styles([
+                weft.container_inline_size(),
+                weft.container_name(value: "dashboard"),
+                weft.when_container(
+                  query: weft.container_min_width(length: weft.px(pixels: 720)),
+                  attrs: [
+                    weft.spacing(pixels: 20),
+                  ],
+                ),
+              ]),
+            ],
+            children: [weft_lustre.text(content: "container")],
+          )
+
+        let css = weft_lustre.debug_stylesheet(attrs: [], child: view)
+
+        string.contains(css, "container-type:inline-size;")
+        |> expect.to_equal(expected: True)
+
+        string.contains(css, "container-name:dashboard;")
+        |> expect.to_equal(expected: True)
+
+        string.contains(css, "@container (min-width:720px){\n")
+        |> expect.to_equal(expected: True)
+
+        string.contains(css, "gap:20px;")
+        |> expect.to_equal(expected: True)
+      }),
       it("renders portals at the root in deterministic layer order", fn() {
         let view =
           weft_lustre.column(attrs: [], children: [
