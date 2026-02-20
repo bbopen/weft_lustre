@@ -7,6 +7,7 @@
 //// - renders to a `lustre/element.Element(msg)` for mounting or SSR
 
 import gleam/list
+import gleam/string
 import lustre/attribute
 import lustre/element
 import weft
@@ -496,7 +497,10 @@ fn compile_node(node: Node(msg)) -> Compiled(msg) {
 
         _ -> {
           let class = weft.class(attrs: weft_attrs)
-          let class_attr = attribute.class(weft.class_name(class: class))
+          let base = weft.class_name(class: class)
+          let extras = weft.class_extra_names(class: class)
+          let all_classes = string.join([base, ..extras], " ")
+          let class_attr = attribute.class(all_classes)
 
           compiled(
             [class, ..child_classes],
