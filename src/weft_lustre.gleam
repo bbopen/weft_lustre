@@ -152,6 +152,55 @@ pub fn toast(child child: Element(msg)) -> Element(msg) {
   in_layer(layer: layer_toast(), child: child)
 }
 
+/// Render a child in a portal layer at a position computed by `weft.solve_overlay`.
+///
+/// Eliminates the need for hardcoded pixel offsets or raw `z-index` styles.
+/// The overlay is placed at `position: fixed` using the coordinates returned by
+/// `weft.solve_overlay`, which handles viewport-edge flipping automatically.
+///
+/// ```gleam
+/// weft_lustre.anchored_overlay(
+///   layer: weft_lustre.layer_in_front(),
+///   anchor: weft.rect(x: click_x, y: click_y, width: 1, height: 1),
+///   overlay_size: weft.size(width: 160, height: 120),
+///   viewport: weft.rect(x: 0, y: 0, width: vp_w, height: vp_h),
+///   preferred_sides: [weft.overlay_side_below(), weft.overlay_side_above()],
+///   child: menu_card,
+/// )
+/// ```
+pub fn anchored_overlay(
+  layer layer: Layer,
+  anchor anchor: weft.Rect,
+  overlay_size overlay_size: weft.Size,
+  viewport viewport: weft.Rect,
+  preferred_sides preferred_sides: List(weft.OverlaySide),
+  child child: Element(msg),
+) -> Element(msg) {
+  let solution =
+    weft.overlay_problem(
+      anchor: anchor,
+      overlay: overlay_size,
+      viewport: viewport,
+    )
+    |> weft.overlay_prefer_sides(sides: preferred_sides)
+    |> weft.solve_overlay
+  let x = weft.overlay_solution_x(solution: solution)
+  let y = weft.overlay_solution_y(solution: solution)
+  in_layer(
+    layer: layer,
+    child: el(
+      attrs: [
+        styles([
+          weft.position(value: weft.position_fixed()),
+          weft.left(length: weft.px(pixels: x)),
+          weft.top(length: weft.px(pixels: y)),
+        ]),
+      ],
+      child: child,
+    ),
+  )
+}
+
 /// Attach one or more `weft.Attribute` values to an element.
 ///
 /// App code should prefer using `styles([...])` rather than calling `weft.class`
