@@ -3,16 +3,101 @@
 [![Package Version](https://img.shields.io/hexpm/v/weft_lustre)](https://hex.pm/packages/weft_lustre)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/weft_lustre/)
 
-Lustre renderer for weft — Elm-UI-style layout with deterministic CSS injection.
+The Lustre renderer for [weft](https://github.com/bbopen/weft). It takes
+weft's typed layout model and compiles it into Lustre virtual DOM elements,
+injecting exactly the CSS rules needed for the current tree.
 
-For headless + styled UI components, see the companion package `weft_lustre_ui`.
+You describe layout with `row`, `column`, `el`, and `grid`. weft_lustre
+turns that into real DOM nodes with deterministic, hashed class names. No
+CSS-in-JS runtime, no style conflicts, no manual class management.
 
 ## Installation
 
-```sh
-gleam add weft_lustre
+weft_lustre isn't on Hex yet. Add it as a git dependency:
+
+```toml
+# gleam.toml
+[dependencies]
+weft_lustre = { git = "https://github.com/bbopen/weft_lustre", branch = "main" }
 ```
 
-## Usage
+## Quick example
 
-See [SPEC.md](SPEC.md) for the complete technical specification.
+```gleam
+import lustre/element
+import weft
+import weft_lustre
+
+pub fn view(model: Model) -> element.Element(Msg) {
+  weft_lustre.layout(
+    attrs: [
+      weft_lustre.styles([
+        weft.width(length: weft.fill()),
+        weft.height(length: weft.fill()),
+      ]),
+    ],
+    child: weft_lustre.column(
+      attrs: [
+        weft_lustre.styles([
+          weft.spacing(pixels: 16),
+          weft.padding(pixels: 24),
+        ]),
+      ],
+      children: [
+        weft_lustre.text(content: "Hello from weft_lustre"),
+        weft_lustre.row(
+          attrs: [
+            weft_lustre.styles([weft.spacing(pixels: 8)]),
+          ],
+          children: [
+            weft_lustre.text(content: "Left"),
+            weft_lustre.text(content: "Right"),
+          ],
+        ),
+      ],
+    ),
+  )
+}
+```
+
+`layout` is the single entry point. It walks the tree, collects every
+`weft.Attribute`, hashes them into class names, and emits one `<style>`
+element with the exact CSS needed. Nothing more gets injected.
+
+## What's included
+
+Layout primitives: `row`, `column`, `el`, `grid`, `paragraph`, `image`,
+`text`, `none`. These map directly to weft's layout modes.
+
+Structural layers: `in_front`, `modal`, `tooltip`, `toast`,
+`behind_content`. Portalled content renders at the root of the layout
+output in stacking order, so you don't need z-index.
+
+Anchored overlays: `anchored_overlay` positions a child using weft's
+overlay solver. It handles viewport-edge flipping automatically. The
+`weft_lustre/overlay` module adds measurement effects for runtime
+positioning on the JS target.
+
+Modal focus trap: `weft_lustre/modal` installs a keyboard focus trap on
+the JS target. It's a no-op on Erlang/SSR.
+
+Time effects: `weft_lustre/time` provides `set_timeout` and
+`set_interval` as Lustre effects. JS target only, no-op on Erlang.
+
+SSR documents: `weft_lustre/document` renders a full HTML document with
+weft CSS injected into `<head>` instead of inline.
+
+## Dependencies
+
+- [weft](https://github.com/bbopen/weft) -- the layout engine
+- [lustre](https://hex.pm/packages/lustre) -- the view framework
+- gleam_stdlib
+
+## Companion package
+
+For UI components (buttons, inputs, dialogs, tabs, etc.), see
+[weft_lustre_ui](https://github.com/bbopen/weft_lustre_ui).
+
+## License
+
+Apache-2.0

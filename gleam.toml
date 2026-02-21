@@ -2,7 +2,7 @@ name = "weft_lustre"
 version = "0.1.0"
 description = "Lustre renderer for weft — Elm-UI-style layout with deterministic CSS injection."
 licences = ["Apache-2.0"]
-repository = { type = "github", user = "brettbonner", repo = "weft_lustre" }
+repository = { type = "github", user = "bbopen", repo = "weft_lustre" }
 gleam = ">= 1.14.0"
 
 [dependencies]
@@ -14,8 +14,3 @@ plinth = { path = "vendor/plinth" }
 
 [dev-dependencies]
 startest = ">= 0.8.0"
-
-[documentation]
-pages = [
-  { title = "Technical Specification", path = "SPEC.md", source = "SPEC.md" },
-]
