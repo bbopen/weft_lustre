@@ -86,7 +86,10 @@ Anchored overlays: `anchored_overlay` positions a child using weft's
 overlay solver. It handles viewport-edge flipping automatically. The
 `weft_lustre/overlay` module exposes positioning helpers and an effect hook.
 The runtime measurement effect is currently a no-op pending upstream
-`plinth` DOM-rect support in Hex.
+`plinth` DOM-rect support in Hex. Call
+`overlay.overlay_runtime_capability()` (or
+`overlay.overlay_runtime_measurement_available()`) to branch behavior
+explicitly when measurement/reposition effects are unavailable.
 
 Modal focus trap: `weft_lustre/modal` installs a keyboard focus trap on
 the JS target. It's a no-op on Erlang/SSR.
