@@ -22,6 +22,29 @@ pub opaque type OverlayKey {
   OverlayKey(suffix: String)
 }
 
+/// Runtime capability state for overlay measurement/reposition effects.
+pub type OverlayRuntimeCapability {
+  /// Runtime overlay measurement is not available.
+  OverlayRuntimeNoMeasurement
+  /// Runtime overlay measurement and reposition effects are available.
+  OverlayRuntimeMeasurementAvailable
+}
+
+/// Report whether runtime overlay measurement/reposition effects are available.
+///
+/// This currently returns `OverlayRuntimeNoMeasurement` on all targets.
+pub fn overlay_runtime_capability() -> OverlayRuntimeCapability {
+  OverlayRuntimeNoMeasurement
+}
+
+/// Convenience bool for runtime measurement availability.
+pub fn overlay_runtime_measurement_available() -> Bool {
+  case overlay_runtime_capability() {
+    OverlayRuntimeMeasurementAvailable -> True
+    OverlayRuntimeNoMeasurement -> False
+  }
+}
+
 fn suffix(key: OverlayKey) -> String {
   case key {
     OverlayKey(suffix:) -> suffix
