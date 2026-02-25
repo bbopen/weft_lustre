@@ -184,47 +184,13 @@ pub fn overlay_position_fixed(
 /// This currently returns `effect.none()` on both JavaScript and Erlang
 /// targets.
 pub fn position_overlay_on_paint(
-  key key: OverlayKey,
-  prefer_sides prefer_sides: List(weft.OverlaySide),
-  alignments alignments: List(weft.OverlayAlign),
-  offset_px offset_px: Int,
-  viewport_padding_px viewport_padding_px: Int,
-  arrow arrow: Option(#(Int, Int)),
-  on_positioned on_positioned: fn(weft.OverlaySolution) -> msg,
-) -> effect.Effect(msg) {
-  position_overlay_on_paint_impl(
-    key,
-    prefer_sides,
-    alignments,
-    offset_px,
-    viewport_padding_px,
-    arrow,
-    on_positioned,
-  )
-}
-
-@target(javascript)
-fn position_overlay_on_paint_impl(
-  _key: OverlayKey,
-  _prefer_sides: List(weft.OverlaySide),
-  _alignments: List(weft.OverlayAlign),
-  _offset_px: Int,
-  _viewport_padding_px: Int,
-  _arrow: Option(#(Int, Int)),
-  _on_positioned: fn(weft.OverlaySolution) -> msg,
-) -> effect.Effect(msg) {
-  effect.none()
-}
-
-@target(erlang)
-fn position_overlay_on_paint_impl(
-  _key: OverlayKey,
-  _prefer_sides: List(weft.OverlaySide),
-  _alignments: List(weft.OverlayAlign),
-  _offset_px: Int,
-  _viewport_padding_px: Int,
-  _arrow: Option(#(Int, Int)),
-  _on_positioned: fn(weft.OverlaySolution) -> msg,
+  key _key: OverlayKey,
+  prefer_sides _prefer_sides: List(weft.OverlaySide),
+  alignments _alignments: List(weft.OverlayAlign),
+  offset_px _offset_px: Int,
+  viewport_padding_px _viewport_padding_px: Int,
+  arrow _arrow: Option(#(Int, Int)),
+  on_positioned _on_positioned: fn(weft.OverlaySolution) -> msg,
 ) -> effect.Effect(msg) {
   effect.none()
 }

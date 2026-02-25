@@ -26,6 +26,7 @@ After Hex publish, install with:
 
 ```toml
 [dependencies]
+weft = ">= 0.1.0 and < 1.0.0"
 weft_lustre = ">= 0.1.0 and < 1.0.0"
 ```
 
