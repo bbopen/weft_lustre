@@ -13,12 +13,21 @@ CSS-in-JS runtime, no style conflicts, no manual class management.
 
 ## Installation
 
-weft_lustre isn't on Hex yet. Add it as a git dependency:
+Before the first Hex release, use local path dependencies from a checked-out
+stack:
 
 ```toml
-# gleam.toml
 [dependencies]
-weft_lustre = { git = "https://github.com/bbopen/weft_lustre", branch = "main" }
+weft = { path = "../weft" }
+weft_lustre = { path = "../weft_lustre" }
+```
+
+After Hex publish, install with:
+
+```toml
+[dependencies]
+weft = ">= 0.1.0 and < 1.0.0"
+weft_lustre = ">= 0.1.0 and < 1.0.0"
 ```
 
 ## Quick example
@@ -75,8 +84,9 @@ output in stacking order, so you don't need z-index.
 
 Anchored overlays: `anchored_overlay` positions a child using weft's
 overlay solver. It handles viewport-edge flipping automatically. The
-`weft_lustre/overlay` module adds measurement effects for runtime
-positioning on the JS target.
+`weft_lustre/overlay` module exposes positioning helpers and an effect hook.
+The runtime measurement effect is currently a no-op pending upstream
+`plinth` DOM-rect support in Hex.
 
 Modal focus trap: `weft_lustre/modal` installs a keyboard focus trap on
 the JS target. It's a no-op on Erlang/SSR.
